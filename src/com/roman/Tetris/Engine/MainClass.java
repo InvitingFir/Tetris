@@ -4,7 +4,7 @@ import com.roman.Tetris.Panels.MainPanel;
 
 import javax.swing.*;
 
-public class MainClass extends JFrame{
+public class MainClass{
     public static void main(String[] args) {
        JFrame MainFrame = new JFrame("Tetris");
        MainFrame.setSize(514, 655);

@@ -4,8 +4,6 @@ import com.roman.Tetris.Engine.Gameplay;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -32,13 +30,13 @@ public class GamePanel extends JPanel{
         add(FieldPanel, BorderLayout.CENTER);
 
         FieldPanel.setFocusable(true);
-        FieldPanel.addKeyListener(new KeyListener());
+        FieldPanel.addKeyListener(new MyKeyListener());
         SetField();
         gm = new Gameplay();
     }
 
 
-    void SetField(){
+    private void SetField(){
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIWDTH; j++) {
                 field[i][j] = new JLabel();
@@ -53,7 +51,7 @@ public class GamePanel extends JPanel{
         return Black;
     }
 
-    void AddIcon(int i, int j, Icon temp){
+    private void  AddIcon(int i, int j, Icon temp){
         Icons[i][j] = temp;
     }
 
@@ -68,7 +66,7 @@ public class GamePanel extends JPanel{
         field[i][j].setIcon(Icons[i][j]);
     }
 
-    private class KeyListener extends KeyAdapter{
+    private class MyKeyListener extends KeyAdapter{
         @Override
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
