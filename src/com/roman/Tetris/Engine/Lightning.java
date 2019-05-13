@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.util.ArrayList;
 
 public class Lightning extends Shape{
-    static int rotation;
 
     Lightning(){rotation = 0;}
 

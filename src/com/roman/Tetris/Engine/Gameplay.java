@@ -10,50 +10,56 @@ public class Gameplay implements  Runnable
     private final static int HEIGHT = 12;
     private final static int WIDTH = 10;
     private final static int NEW_ZERO = 4;
-    private int FPS = 4;
-    private long TargetTime = 1000/FPS;
+    private int wait = 500;
+    private int Score = 0;
     private boolean isRunning;
     private static boolean[][] NoMovement = new boolean [HEIGHT+NEW_ZERO][WIDTH];
     private static ArrayList <Shape> Shapes = new ArrayList();
+    private static ArrayList <Shape> NextShape = new ArrayList();
     private Thread Timer = new Thread(this);
-    private Thread GameOverTimer;
     private com.roman.Tetris.Panels.GamePanel GamePanel = new GamePanel();
 
     public Gameplay(){
-        ShapeGenerator();
+        Shapes = ShapeGenerator();
+        NextShape = ShapeGenerator();
         isRunning = true;
         Timer.start();
     }
 
+
     public static boolean getNoMovement(int i, int j){ return NoMovement[i+NEW_ZERO][j]; }
 
     //Создает ArrayList, новую фигуру
-    private void ShapeGenerator(){
+    private ArrayList ShapeGenerator(){
+        ArrayList <Shape> Temp = new ArrayList();
         int i = (int)(Math.random()*4);
         switch(i){
             case 0:
                 Square s = new Square();
-                Shapes = s.CreateShape();
+                Temp = s.CreateShape();
+                GamePanel.setNextShape("Square");
                 break;
             case 1:
                 Lightning l = new Lightning();
-                Shapes = l.CreateShape();
+                Temp = l.CreateShape();
+                GamePanel.setNextShape("Lightning");
                 break;
             case 2:
                 TShape t = new TShape();
-                Shapes = t.CreateShape();
+                Temp = t.CreateShape();
+                GamePanel.setNextShape("TShape");
                 break;
             case 3:
                 Column c = new Column();
-                Shapes = c.CreateShape();
+                Temp = c.CreateShape();
+                GamePanel.setNextShape("Column");
                 break;
         }
+        return Temp;
     }
 
     @Override
     public synchronized void run() {    //Смещение фигур вниз
-        long start = System.nanoTime();
-        long elapsed, wait;
 
         int ii;
         int jj;
@@ -71,9 +77,6 @@ public class Gameplay implements  Runnable
             GamePanel.ShapeMovement(ii, jj, Shapes.get(i).GetCurrentIcon());
             if(ii>0){ GamePanel.ShapeMovement(ii-1, jj, GamePanel.Clear()); }
         }
-        elapsed = System.nanoTime() - start;
-        wait = TargetTime - elapsed/1000000;
-        if(wait <= 0) wait = 300;
         try{
             Timer.sleep(wait);
         }
@@ -91,19 +94,23 @@ public class Gameplay implements  Runnable
             jj = Shapes.get(i).Getj();
             NoMovement[ii+NEW_ZERO][jj] = true;
             if(NoMovement[NEW_ZERO][jj]){
-                isRunning = false;
-                GameOverTimer = new Thread(new GameOver());
-                GameOverTimer.start();
+                GameOver g = new GameOver();
                 return;
             }
         }
 
         for (int i = Shapes.size()-1; i >=0 ; i--) {
             ii = Shapes.get(i).Geti();
-            if(Checked != ii){Destroy(ii); Checked = ii;}
+            if (Checked != ii) {
+                Destroy(ii);
+                Checked = ii;
+            }
         }
-        Shapes.clear();
-        ShapeGenerator();
+        Score+=100;
+        GamePanel.SetScore(Score);
+        if(wait>=100) wait-=5;
+        Shapes = NextShape;
+        NextShape = ShapeGenerator();
     }
 
     //Стирание фигуры
@@ -124,6 +131,7 @@ public class Gameplay implements  Runnable
         if(key == KeyEvent.VK_RIGHT){ GoRight(); }
         if(key == KeyEvent.VK_LEFT){ GoLeft(); }
         if(key == KeyEvent.VK_UP){ ChangeShape(); }
+        if(key == KeyEvent.VK_ENTER){ restart();}
     }
 
     //движение вправо
@@ -186,31 +194,43 @@ public class Gameplay implements  Runnable
         }
     }
 
+    private void restart(){
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                NoMovement[i+NEW_ZERO][j] = false;
+            }
+        }
+        wait = 500;
+        isRunning = true;
+        Shapes = ShapeGenerator();
+        NextShape = ShapeGenerator();
+        GamePanel.ClearGUI();
+        Score = 0;
+    }
+
 
     //анимация конца игры
     class GameOver implements Runnable{
         int Layer = 0;
+        private Thread GameOverTimer = new Thread(this);
+
+        public GameOver(){
+            isRunning = false;
+            GameOverTimer.start();
+        }
         @Override
         public void run() {
-            long start, elapsed, wait;
-
             while (Layer != HEIGHT+1) {
-                start = System.nanoTime();
-
                 GameOverDestroy();
-
-                elapsed = System.nanoTime() - start;
-                wait = TargetTime - elapsed / 1000000;
-                if (wait <= 0) wait = 500;
                 try {
-                    Timer.sleep(wait);
+                    Timer.sleep(300);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
 
-        public void GameOverDestroy() {
+        private void GameOverDestroy() {
             if(Layer<=HEIGHT-1){
                 for (int j = 0; j < WIDTH; j++) {
                     GamePanel.ShapeMovement(Layer, j, GamePanel.Clear());
