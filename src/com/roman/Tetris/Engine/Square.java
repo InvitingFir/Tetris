@@ -14,7 +14,7 @@ public class Square extends Shape{
 
     public ArrayList CreateShape() {
         ArrayList <Square> Temp = new ArrayList();
-        Icon TempIcon = ColorSet();
+        Icon TempIcon = super.ColorSet();
         Temp.add(new Square(-1, 5, TempIcon));
         return Temp;
     }

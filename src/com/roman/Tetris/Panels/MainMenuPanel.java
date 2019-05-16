@@ -2,10 +2,8 @@ package com.roman.Tetris.Panels;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class MainMenuPanel extends JPanel implements ActionListener {
+public class MainMenuPanel extends JPanel{
     private JButton start = new JButton("Start");
     private JButton Score = new JButton("Score");
     private JLabel Pic = new JLabel();
@@ -20,9 +18,4 @@ public class MainMenuPanel extends JPanel implements ActionListener {
     }
 
     public JButton GetStartButton(){return start;}
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        System.out.println("Hello world");
-    }
 }

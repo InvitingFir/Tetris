@@ -13,13 +13,12 @@ public class GamePanel extends JPanel{
     public final static int WIDTH = 10;
 
     //панели, окна и все прилагающееся
-    private static JPanel FieldPanel;
-    private JPanel ScorePanel;
-    private static NextShapePanel NextShape;
+    private JPanel FieldPanel;
+    private NextShapePanel NextShape;
 
     //прочее
-    private static JLabel [][] field;
-    private static Icon [][] Icons;
+    private JLabel [][] field;
+    private Icon [][] Icons;
     private Gameplay gm;
     private Icon Black  = new ImageIcon(getClass().getResource("/com/roman/Tetris/Resource/Black.png"));
 
@@ -27,7 +26,6 @@ public class GamePanel extends JPanel{
     // Инициализация игры //
     public void SetGui(){
         FieldPanel = new JPanel(new GridLayout(HEIGHT, WIDTH));
-        ScorePanel = new JPanel();
         NextShape = new NextShapePanel();
 
         setLayout(new BorderLayout());
@@ -37,12 +35,7 @@ public class GamePanel extends JPanel{
         FieldPanel.setFocusable(true);
         FieldPanel.addKeyListener(new MyKeyListener());
         SetField();
-        gm = new Gameplay();
-    }
-
-    public void paintComponent(Graphics g){
-        if(!this.isFocusOwner())
-            g.drawString("Press Tab to start", 285, 310);
+        gm = new Gameplay(this);
     }
 
     public void setNextShape(String s){
@@ -99,9 +92,7 @@ public class GamePanel extends JPanel{
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
             gm.move(key);
-
         }
     }
-
 }
 

@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 public class TShape extends Shape{
 
-    TShape(){rotation = 0;}
+    public TShape(){rotation = 0;}
 
-    TShape(int i, int j, Icon TempIcon){
+    private TShape(int i, int j, Icon TempIcon){
         this.Seti(i);
         this.Setj(j);
         this.SetIcon(TempIcon);

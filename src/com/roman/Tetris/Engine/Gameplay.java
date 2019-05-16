@@ -12,24 +12,24 @@ public class Gameplay implements  Runnable
     private final static int NEW_ZERO = 4;
     private int wait = 500;
     private int Score = 0;
-    private boolean isRunning;
+    private boolean isRunning = true;
     private static boolean[][] NoMovement = new boolean [HEIGHT+NEW_ZERO][WIDTH];
-    private static ArrayList <Shape> Shapes = new ArrayList();
-    private static ArrayList <Shape> NextShape = new ArrayList();
+    private ArrayList <Shape> Shapes;
+    private ArrayList <Shape> NextShape;
     private Thread Timer = new Thread(this);
-    private com.roman.Tetris.Panels.GamePanel GamePanel = new GamePanel();
+    private com.roman.Tetris.Panels.GamePanel GamePanel;
 
-    public Gameplay(){
-        Shapes = ShapeGenerator();
-        NextShape = ShapeGenerator();
-        isRunning = true;
+    public Gameplay(GamePanel g){
+        GamePanel = g;
+        Shapes = ShapeGenerator(); //генерация основной фигуры
+        NextShape = ShapeGenerator();//генерация следующей фигуры
         Timer.start();
     }
 
 
     public static boolean getNoMovement(int i, int j){ return NoMovement[i+NEW_ZERO][j]; }
 
-    //Создает ArrayList, новую фигуру
+    //Создает ArrayList с новой фигурой
     private ArrayList ShapeGenerator(){
         ArrayList <Shape> Temp = new ArrayList();
         int i = (int)(Math.random()*4);
@@ -58,17 +58,15 @@ public class Gameplay implements  Runnable
         return Temp;
     }
 
-    @Override
-    public synchronized void run() {    //Смещение фигур вниз
-
+    //Смещение фигур вниз
+    public synchronized void run() {
         int ii;
         int jj;
         while(isRunning){
         for (int i = 0; i < Shapes.size(); i++) {
             ii = Shapes.get(i).Geti();
             jj = Shapes.get(i).Getj();
-            if (ii == HEIGHT -1 || NoMovement[NEW_ZERO + ii + 1][jj]) {
-                freeze(); }
+            if (ii == HEIGHT -1 || NoMovement[NEW_ZERO + ii + 1][jj]) { freeze(); }
         }
 
         for (int i = 0; i < Shapes.size(); i++) {
@@ -77,18 +75,14 @@ public class Gameplay implements  Runnable
             GamePanel.ShapeMovement(ii, jj, Shapes.get(i).GetCurrentIcon());
             if(ii>0){ GamePanel.ShapeMovement(ii-1, jj, GamePanel.Clear()); }
         }
-        try{
-            Timer.sleep(wait);
-        }
+        try{ Timer.sleep(wait); }
         catch(Exception e){e.printStackTrace(); }
         }
     }
 
     //удаление из ArrayList, заморозка фигуры
     private void freeze(){
-        int Checked = 100;
-        int ii;
-        int jj;
+        int ii, jj, levelChecked = 100;
         for (int i = 0; i < Shapes.size(); i++) {
             ii = Shapes.get(i).Geti();
             jj = Shapes.get(i).Getj();
@@ -101,10 +95,8 @@ public class Gameplay implements  Runnable
 
         for (int i = Shapes.size()-1; i >=0 ; i--) {
             ii = Shapes.get(i).Geti();
-            if (Checked != ii) {
-                Destroy(ii);
-                Checked = ii;
-            }
+            if(levelChecked != ii) Destroy(ii);
+            levelChecked = ii;
         }
         Score+=100;
         GamePanel.SetScore(Score);
@@ -174,7 +166,7 @@ public class Gameplay implements  Runnable
         }
     }
 
-    //поворот фигуры
+    //поворот фигуры по часовой стрелке
     private void ChangeShape(){
         int ii;
         int jj;
@@ -194,18 +186,17 @@ public class Gameplay implements  Runnable
         }
     }
 
-    private void restart(){
-        for (int i = 0; i < HEIGHT; i++) {
-            for (int j = 0; j < WIDTH; j++) {
-                NoMovement[i+NEW_ZERO][j] = false;
-            }
-        }
+    private void restart(){ //новая игра при нажатии на Enter
+        NoMovement = new boolean [HEIGHT+NEW_ZERO][WIDTH];
         wait = 500;
         isRunning = true;
+        Timer = new Thread(this);
+        Timer.start();
         Shapes = ShapeGenerator();
         NextShape = ShapeGenerator();
         GamePanel.ClearGUI();
         Score = 0;
+        GamePanel.SetScore(Score);
     }
 
 
@@ -220,13 +211,10 @@ public class Gameplay implements  Runnable
         }
         @Override
         public void run() {
-            while (Layer != HEIGHT+1) {
+            while (Layer != HEIGHT) {
                 GameOverDestroy();
-                try {
-                    Timer.sleep(300);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                try { Timer.sleep(300); }
+                catch (Exception e) { e.printStackTrace(); }
             }
         }
 

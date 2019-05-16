@@ -9,14 +9,13 @@ public class MainClass{
     public static final int FRAME_HEIGHT = 620;
     public static void main(String[] args) {
        JFrame MainFrame = new JFrame("Tetris");
-       MainFrame.setSize(570, 620);
+       MainFrame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
        MainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        MainFrame.setResizable(false);
 
         MainPanel m = new MainPanel();
         m.Setup();
        MainFrame.getContentPane().add(m.GetMainPanel());
-
        MainFrame.setVisible(true);
     }
 }
