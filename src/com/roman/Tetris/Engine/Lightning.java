@@ -7,11 +7,7 @@ public class Lightning extends Shape{
 
     Lightning(){rotation = 0;}
 
-    Lightning(int i, int j, Icon TempIcon){
-        this.Seti(i);
-        this.Setj(j);
-        this.SetIcon(TempIcon);
-    }
+    private Lightning(int i, int j, Icon TempIcon){ super(i, j, TempIcon); }
 
     public ArrayList CreateShape() {
         ArrayList <Lightning> Temp = new ArrayList();

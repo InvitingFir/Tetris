@@ -5,12 +5,8 @@ import java.util.ArrayList;
 
 public class Square extends Shape{
 
-    Square(){}
-    Square(int i, int j, Icon TempIcon){
-        this.Seti(i);
-        this.Setj(j);
-        this.SetIcon(TempIcon);
-    }
+    public Square(){}
+    private Square(int i, int j, Icon TempIcon){ super(i, j, TempIcon); }
 
     public ArrayList CreateShape() {
         ArrayList <Square> Temp = new ArrayList();

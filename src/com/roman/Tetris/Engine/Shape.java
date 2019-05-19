@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public abstract class Shape {
 
     protected final static int HEIGHT = 12;
-    protected final static int WIWDTH = 10;
+    protected final static int WIDTH = 10;
     private int Currentj = 0;
     private int Currenti = 0;
     private Icon Red = new ImageIcon(getClass().getResource("/com/roman/Tetris/Resource/Red.png"));
@@ -16,6 +16,14 @@ public abstract class Shape {
     private Icon Purple = new ImageIcon(getClass().getResource("/com/roman/Tetris/Resource/Purple.png"));
     protected int rotation = 0;
     private Icon CurrentIcon;
+
+    protected Shape(){}
+
+    protected Shape(int i, int j, Icon TempIcon){
+        this.Seti(i);
+        this.Setj(j);
+        this.SetIcon(TempIcon);
+    }
 
 
     protected Icon ColorSet(){
@@ -64,7 +72,7 @@ public abstract class Shape {
         Currenti++;
         return Currenti; }
 
-    public void SetIcon(Icon Temp){
+    private void SetIcon(Icon Temp){
         CurrentIcon = Temp;
     }
 

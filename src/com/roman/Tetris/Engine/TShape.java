@@ -7,11 +7,7 @@ public class TShape extends Shape{
 
     public TShape(){rotation = 0;}
 
-    private TShape(int i, int j, Icon TempIcon){
-        this.Seti(i);
-        this.Setj(j);
-        this.SetIcon(TempIcon);
-    }
+    private TShape(int i, int j, Icon TempIcon){ super(i, j, TempIcon); }
 
     public ArrayList CreateShape() {
         ArrayList <TShape> Temp = new ArrayList();
@@ -53,7 +49,7 @@ public class TShape extends Shape{
             case 3:
                 ii = temp.get(2).Geti();
                 jj = temp.get(2).Getj();
-                if(jj == WIWDTH-1 || Gameplay.getNoMovement(ii, jj+1)) return temp;
+                if(jj == WIDTH-1 || Gameplay.getNoMovement(ii, jj+1)) return temp;
                 temp = rotate4(temp);
                 rotation = 0;
                 break;

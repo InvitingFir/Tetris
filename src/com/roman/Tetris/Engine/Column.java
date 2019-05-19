@@ -6,11 +6,7 @@ import java.util.ArrayList;
 public class Column extends Shape{
 
     Column(){rotation = 0;}
-    Column(int i, int j, Icon tempIcon){
-        this.Seti(i);
-        this.Setj(j);
-        this.SetIcon(tempIcon);
-    }
+    private Column(int i, int j, Icon TempIcon){ super(i, j, TempIcon); }
 
     @Override
     public ArrayList CreateShape() {
@@ -33,7 +29,7 @@ public class Column extends Shape{
                 if(jj == 0 || Gameplay.getNoMovement(ii+1, jj-1)) return(temp);
                 ii = temp.get(0).Geti();
                 jj = temp.get(0).Getj();
-                if(jj == WIWDTH-1 || Gameplay.getNoMovement(ii-1, jj+1)) return(temp);
+                if(jj == WIDTH-1 || Gameplay.getNoMovement(ii-1, jj+1)) return(temp);
                 temp = rotate1(temp);
                 rotation++;
                 break;
