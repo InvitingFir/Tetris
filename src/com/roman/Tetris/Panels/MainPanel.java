@@ -5,35 +5,33 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MainPanel{
+public class MainPanel extends JPanel{
     public final static String GAMEPANEL = "Switch to GamePanel";
     public final static String MAINMENUPANEL = "Switch to MainMenu";
     public final static String HIGHSCOREPANEL = "Switch to HighScorePanel";
 
     private CardLayout cl = new CardLayout();
-    private GamePanel gpanel = new GamePanel();
-    private MainMenuPanel mmpanel = new MainMenuPanel();
-    private HighScorePanel hspanel = new HighScorePanel();
-    private JPanel mp = new JPanel();
+    private GamePanel gpanel;
+    private MainMenuPanel mmpanel;
 
-    public void Setup(){
-        mp.setLayout(cl);
-        mp.add(mmpanel, MAINMENUPANEL);
-        mmpanel.GetStartButton().addActionListener(new StartButtonListener());
-        mp.add(gpanel, GAMEPANEL);
-        mp.add(hspanel, HIGHSCOREPANEL);
-        cl.show(mp, MAINMENUPANEL);
+    public MainPanel(){
+        this.setLayout(cl);
+        mmpanel = new MainMenuPanel(this);
+        gpanel = new GamePanel(this);
+        Setup();
     }
 
-    public JPanel GetMainPanel(){ return mp;}
+    public void Setup(){
+        add(mmpanel, MAINMENUPANEL);
+        add(gpanel, GAMEPANEL);
+    }
 
-    public class StartButtonListener implements ActionListener{
-        @Override
-        public void actionPerformed(ActionEvent e) {
+    public void swap(String s){
+        if(s.equals(GAMEPANEL)){
             gpanel.SetGui();
-            cl.show(mp, GAMEPANEL);
-            gpanel.requestFocus(true);
-            mp.revalidate();
+            cl.show(this, s);
+            gpanel.getFieldPanel().requestFocusInWindow();
+            this.revalidate();
         }
     }
 }

@@ -7,13 +7,11 @@ import java.util.ArrayList;
 
 public class Gameplay implements  Runnable
 {
-    private final static int HEIGHT = 12;
-    private final static int WIDTH = 10;
     private final static int NEW_ZERO = 4;
     private int wait = 500;
     private int Score = 0;
     private boolean isRunning = true;
-    private static boolean[][] NoMovement = new boolean [HEIGHT+NEW_ZERO][WIDTH];
+    private static boolean[][] NoMovement = new boolean [com.roman.Tetris.Panels.GamePanel.HEIGHT +NEW_ZERO][com.roman.Tetris.Panels.GamePanel.WIDTH];
     private ArrayList <Shape> Shapes;
     private ArrayList <Shape> NextShape;
     private Thread Timer = new Thread(this);
@@ -66,7 +64,7 @@ public class Gameplay implements  Runnable
         for (int i = 0; i < Shapes.size(); i++) {
             ii = Shapes.get(i).Geti();
             jj = Shapes.get(i).Getj();
-            if (ii == HEIGHT -1 || NoMovement[NEW_ZERO + ii + 1][jj]) { freeze(); }
+            if (ii == GamePanel.HEIGHT -1 || NoMovement[NEW_ZERO + ii + 1][jj]) { freeze(); }
         }
 
         for (int i = 0; i < Shapes.size(); i++) {
@@ -107,11 +105,11 @@ public class Gameplay implements  Runnable
 
     //Стирание фигуры
     private void Destroy(int ii){
-        for (int j = 0; j < WIDTH; j++) {
+        for (int j = 0; j < GamePanel.WIDTH; j++) {
             if(!NoMovement[ii+NEW_ZERO][j]) return;
         }
         for (int i =ii; i >= 1; i--) {
-            for (int j = 0; j < WIDTH; j++) {
+            for (int j = 0; j < GamePanel.WIDTH; j++) {
                 GamePanel.LabelCut(i, j);
                 NoMovement[i+NEW_ZERO][j] = NoMovement[i-1+NEW_ZERO][j];
             }
@@ -133,7 +131,7 @@ public class Gameplay implements  Runnable
         for (int i = 0; i < Shapes.size(); i++) {
             jj = Shapes.get(i).Getj();
             ii = Shapes.get(i).Geti();
-            if(jj==WIDTH-1 || NoMovement[NEW_ZERO+ii][jj+1]) return;
+            if(jj==GamePanel.WIDTH-1 || NoMovement[NEW_ZERO+ii][jj+1]) return;
         }
 
         for (int i = 0; i < Shapes.size(); i++) {
@@ -141,7 +139,6 @@ public class Gameplay implements  Runnable
             jj = Shapes.get(i).Getj();
             GamePanel.ShapeMovement(ii, jj, GamePanel.Clear());
             GamePanel.ShapeMovement(ii, jj + 1, Shapes.get(i).GetCurrentIcon());
-            jj++;
             Shapes.get(i).Setj(1);
         }
     }
@@ -161,7 +158,6 @@ public class Gameplay implements  Runnable
             jj = Shapes.get(i).Getj();
             GamePanel.ShapeMovement(ii, jj, GamePanel.Clear());
             GamePanel.ShapeMovement(ii, jj-1, Shapes.get(i).GetCurrentIcon());
-            jj--;
             Shapes.get(i).Setj(-1);
         }
     }
@@ -187,7 +183,7 @@ public class Gameplay implements  Runnable
     }
 
     private void restart(){ //новая игра при нажатии на Enter
-        NoMovement = new boolean [HEIGHT+NEW_ZERO][WIDTH];
+        NoMovement = new boolean [GamePanel.HEIGHT+NEW_ZERO][GamePanel.WIDTH];
         wait = 500;
         isRunning = true;
         Timer = new Thread(this);
@@ -211,7 +207,7 @@ public class Gameplay implements  Runnable
         }
         @Override
         public void run() {
-            while (Layer != HEIGHT) {
+            while (Layer != GamePanel.HEIGHT) {
                 GameOverDestroy();
                 try { Timer.sleep(300); }
                 catch (Exception e) { e.printStackTrace(); }
@@ -219,8 +215,8 @@ public class Gameplay implements  Runnable
         }
 
         private void GameOverDestroy() {
-            if(Layer<=HEIGHT-1){
-                for (int j = 0; j < WIDTH; j++) {
+            if(Layer<=GamePanel.HEIGHT-1){
+                for (int j = 0; j < GamePanel.WIDTH; j++) {
                     GamePanel.ShapeMovement(Layer, j, GamePanel.Clear());
                 }
                 Layer++;

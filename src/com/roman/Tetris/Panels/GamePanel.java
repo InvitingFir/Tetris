@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class GamePanel extends JPanel{
+public class GamePanel extends OtherPanels{
     //константы
     public final static int HEIGHT = 12;
     public final static int WIDTH = 10;
@@ -22,6 +22,7 @@ public class GamePanel extends JPanel{
     private Gameplay gm;
     private Icon Black  = new ImageIcon(getClass().getResource("/com/roman/Tetris/Resource/Black.png"));
 
+    public GamePanel(MainPanel newmp){ super(newmp); }
 
     // Инициализация игры //
     public void SetGui(){
@@ -41,6 +42,8 @@ public class GamePanel extends JPanel{
     public void setNextShape(String s){
         NextShape.setNextShape(s);
     }
+
+    public JPanel getFieldPanel(){return FieldPanel; }
 
     public void SetScore(int s){NextShape.SetScore(s);}
 
